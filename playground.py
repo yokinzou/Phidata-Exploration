@@ -1,13 +1,19 @@
+from dotenv import load_dotenv
+import os
+
+# 加载 .env 文件中的环境变量
+load_dotenv()
+
 from phi.agent import Agent
-from phi.model.openai import OpenAIChat
 from phi.storage.agent.sqlite import SqlAgentStorage
 from phi.tools.duckduckgo import DuckDuckGo
 from phi.tools.yfinance import YFinanceTools
 from phi.playground import Playground, serve_playground_app
+from phi.model.deepseek import DeepSeekChat
 
 web_agent = Agent(
     name="Web Agent",
-    model=OpenAIChat(id="gpt-4o"),
+    model=DeepSeekChat(),
     tools=[DuckDuckGo()],
     instructions=["Always include sources"],
     storage=SqlAgentStorage(table_name="web_agent", db_file="agents.db"),
@@ -17,7 +23,7 @@ web_agent = Agent(
 
 finance_agent = Agent(
     name="Finance Agent",
-    model=OpenAIChat(id="gpt-4o"),
+    model=DeepSeekChat(),
     tools=[YFinanceTools(stock_price=True, analyst_recommendations=True, company_info=True, company_news=True)],
     instructions=["Use tables to display data"],
     storage=SqlAgentStorage(table_name="finance_agent", db_file="agents.db"),
